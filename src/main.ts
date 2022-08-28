@@ -1,11 +1,17 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import * as bootstrap from "bootstrap";
 import { config } from './config';
+import { Dish } from './domain/Dish';
 
 const $btnGuardarCliente = document.querySelector<HTMLButtonElement>('#guardar-cliente')!;
 $btnGuardarCliente.addEventListener('click', guardarCliente)
 
-let cliente: object = {
+interface Cliente {
+  mesa: string,
+  hora: string,
+  pedido: any[]
+}
+let cliente: Cliente = {
   mesa: '',
   hora: '',
   pedido: []
@@ -40,7 +46,7 @@ function guardarCliente() {
   const $modalFormulario = document.querySelector<HTMLFormElement>('#formulario')!;
   const modalBootstrap = bootstrap.Modal.getInstance($modalFormulario);
 
-  modalBootstrap!.hide();
+  modalBootstrap!.toggle();
 
   // Mostrar las secciones
   mostrarSecciones();
@@ -51,7 +57,7 @@ function guardarCliente() {
 function mostrarSecciones() {
   const $$seccionesOcultas = document.querySelectorAll<HTMLElement>('.d-none')!;
 
-  $$seccionesOcultas.forEach((seccion: any) => seccion.classList.remove('d-none'))
+  $$seccionesOcultas.forEach((seccion) => seccion.classList.remove('d-none'))
 }
 
 function obtenerPlatillos() {
@@ -62,9 +68,9 @@ function obtenerPlatillos() {
     .catch((err: any) => console.log(err))
 }
 
-function mostrarPlatillos(platillos: any) {
+function mostrarPlatillos(platillos: Dish[]) {
   const $contenido = document.querySelector<HTMLDivElement>('#platillos .contenido')!;
-  platillos.forEach((e: any) => {
+  platillos.forEach((e) => {
     const row = document.createElement('div');
     row.classList.add('row');
 
@@ -74,7 +80,7 @@ function mostrarPlatillos(platillos: any) {
 
     const precio = document.createElement('div');
     precio.classList.add('col-md-3');
-    precio.textContent = e.precio;
+    precio.textContent = e.precio.toString();
 
     row.appendChild(nombre);
     row.appendChild(precio);
